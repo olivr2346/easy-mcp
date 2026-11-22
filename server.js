@@ -332,6 +332,39 @@ function fetchUrl(url) {
   });
 }
 
+const SKIP_READ_GUARD = process.env.EASY_MCP_SKIP_READ_GUARD === '1';
+const readFiles = new Map(); // canonicalPath -> { mtimeMs, size }
+
+function readKey(abs) {
+  return realpathOrAncestor(abs);
+}
+
+function markFileRead(abs) {
+  const key = readKey(abs);
+  const st = fs.statSync(abs);
+  if (readFiles.has(key)) readFiles.delete(key);
+  readFiles.set(key, { mtimeMs: st.mtimeMs, size: st.size });
+  if (readFiles.size > 2000) readFiles.delete(readFiles.keys().next().value);
+}
+
+function assertReadBeforeModify(abs) {
+  if (SKIP_READ_GUARD) return;
+  let st;
+  try {
+    st = fs.statSync(abs);
+  } catch (err) {
+    if (err.code === 'ENOENT') return; // Creating a new file is allowed.
+    throw err;
+  }
+  const prev = readFiles.get(readKey(abs));
+  if (!prev) {
+    throw new Error(`Read ${relOf(abs)} with read_file before modifying it.`);
+  }
+  if (st.mtimeMs !== prev.mtimeMs || st.size !== prev.size) {
+    throw new Error(`${relOf(abs)} changed on disk since it was last read; call read_file again before modifying it.`);
+  }
+}
+
 const TOOLS = [
   {
     name: 'read_file',
@@ -340,6 +373,7 @@ const TOOLS = [
     run: ({ path: p }) => {
       const abs = resolveInProject(p);
       const lines = readTextFile(abs).split('\n');
+      markFileRead(abs);
       return `File: ${relOf(abs)} (${lines.length} lines)\n\n` + lines.map((l, i) => `${String(i + 1).padStart(4)} | ${l}`).join('\n');
     }
   },
@@ -348,49 +382,66 @@ const TOOLS = [
     description: 'Read several text files at once.',
     inputSchema: { type: 'object', properties: { paths: { type: 'array', items: { type: 'string' } } }, required: ['paths'] },
     run: ({ paths }) => paths.map(p => {
-      try { return `===== ${p} =====\n${readTextFile(resolveInProject(p))}`; }
-      catch (e) { return `===== ${p} =====\n[error] ${e.message}`; }
+      try {
+        const abs = resolveInProject(p);
+        const text = readTextFile(abs);
+        markFileRead(abs);
+        return `===== ${p} =====\n${text}`;
+      } catch (e) {
+        return `===== ${p} =====\n[error] ${e.message}`;
+      }
     }).join('\n\n')
   },
   {
     name: 'write_file',
-    description: 'Create or overwrite a text file in the project folder.',
+    description: 'Create or overwrite a text file in the project folder. (Existing files must be read with read_file first.)',
     inputSchema: { type: 'object', properties: { path: { type: 'string' }, content: { type: 'string' } }, required: ['path', 'content'] },
     write: true,
     run: ({ path: p, content }) => {
       const abs = resolveInProject(p);
       assertNotGitInternal(abs);
+      assertReadBeforeModify(abs);
       fs.mkdirSync(path.dirname(abs), { recursive: true });
       fs.writeFileSync(abs, content, 'utf8');
+      markFileRead(abs);
       return `Wrote ${relOf(abs)} (${Buffer.byteLength(content)} bytes)`;
     }
   },
   {
     name: 'write_files',
-    description: 'Create or overwrite several text files at once.',
+    description: 'Create or overwrite several text files at once. (Existing files must be read with read_file first.)',
     inputSchema: { type: 'object', properties: { files: { type: 'array', items: { type: 'object', properties: { path: { type: 'string' }, content: { type: 'string' } }, required: ['path', 'content'] } } }, required: ['files'] },
     write: true,
-    run: ({ files }) => files.map(f => {
-      const abs = resolveInProject(f.path);
-      assertNotGitInternal(abs);
-      fs.mkdirSync(path.dirname(abs), { recursive: true });
-      fs.writeFileSync(abs, f.content, 'utf8');
-      return `Wrote ${relOf(abs)}`;
-    }).join('\n')
+    run: ({ files }) => {
+      const entries = files.map(f => {
+        const abs = resolveInProject(f.path);
+        assertNotGitInternal(abs);
+        assertReadBeforeModify(abs);
+        return { abs, content: f.content };
+      });
+      return entries.map(({ abs, content }) => {
+        fs.mkdirSync(path.dirname(abs), { recursive: true });
+        fs.writeFileSync(abs, content, 'utf8');
+        markFileRead(abs);
+        return `Wrote ${relOf(abs)}`;
+      }).join('\n');
+    }
   },
   {
     name: 'edit_file',
-    description: 'Replace an exact text snippet in a file. Fails if old_text is not found or not unique.',
+    description: 'Replace an exact text snippet in a file. Fails if old_text is not found or not unique. (Existing files must be read with read_file first.)',
     inputSchema: { type: 'object', properties: { path: { type: 'string' }, old_text: { type: 'string' }, new_text: { type: 'string' } }, required: ['path', 'old_text', 'new_text'] },
     write: true,
     run: ({ path: p, old_text, new_text }) => {
       const abs = resolveInProject(p);
       assertNotGitInternal(abs);
+      assertReadBeforeModify(abs);
       const text = readTextFile(abs);
       const first = text.indexOf(old_text);
       if (first < 0) throw new Error('old_text not found');
       if (text.indexOf(old_text, first + 1) >= 0) throw new Error('old_text is not unique');
       fs.writeFileSync(abs, text.slice(0, first) + new_text + text.slice(first + old_text.length), 'utf8');
+      markFileRead(abs);
       return `Edited ${relOf(abs)}`;
     }
   },
@@ -533,6 +584,7 @@ function setProject(p) {
   const abs = path.resolve(String(p));
   if (!fs.existsSync(abs) || !fs.statSync(abs).isDirectory()) throw new Error(`Not a folder: ${p}`);
   projectRoot = abs;
+  readFiles.clear();
   const i = recentProjects.indexOf(abs);
   if (i >= 0) recentProjects.splice(i, 1);
   recentProjects.unshift(abs);
