@@ -732,219 +732,487 @@ function dashboardData() {
 }
 
 const DASHBOARD_HTML = `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Easy MCP</title>
+<title>Easy MCP — Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%20fill=%22none%22%3E%3Crect%20width=%2264%22%20height=%2264%22%20rx=%2216%22%20fill=%22%2318191C%22/%3E%3Crect%20x=%221%22%20y=%221%22%20width=%2262%22%20height=%2262%22%20rx=%2215%22%20stroke=%22%23FFFFFF%22%20stroke-opacity=%220.12%22%20stroke-width=%222%22/%3E%3Cpath%20d=%22M26%2017H19C14.58%2017%2011%2020.58%2011%2025V39C11%2043.42%2014.58%2047%2019%2047H26%22%20stroke=%22%23E3E3E3%22%20stroke-width=%224.5%22%20stroke-linecap=%22round%22/%3E%3Cpath%20d=%22M38%2017H45C49.42%2017%2053%2020.58%2053%2025V39C53%2043.42%2049.42%2047%2045%2047H38%22%20stroke=%22%23A8C7FA%22%20stroke-width=%224.5%22%20stroke-linecap=%22round%22/%3E%3Cpath%20d=%22M23%2032H41%22%20stroke=%22%2381C995%22%20stroke-width=%224.5%22%20stroke-linecap=%22round%22/%3E%3Ccircle%20cx=%2223%22%20cy=%2232%22%20r=%223.5%22%20fill=%22%23E3E3E3%22/%3E%3Ccircle%20cx=%2241%22%20cy=%2232%22%20r=%223.5%22%20fill=%22%23A8C7FA%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    color-scheme: dark light;
-    --bg: #0d0c0a;
-    --card: #151311;
-    --card-elevated: #1a1715;
-    --border: #29241f;
-    --border-hover: #423930;
-    --text: #f5f0eb;
-    --muted: #96897b;
-    --gold: #f59e0b;
-    --flame: #ea580c;
-    --flame-dark: #9a2c04;
-    --ok: #22c55e;
-    --err: #ef4444;
-    --accent-glow: rgba(234, 88, 12, 0.18);
-    --gold-glow: rgba(245, 158, 11, 0.15);
-    --input-bg: #100f0d;
-    --radius: 14px;
-    --radius-sm: 8px;
-  }
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #faf7f2;
-      --card: #ffffff;
-      --card-elevated: #fcfbfa;
-      --border: #e8e0d5;
-      --border-hover: #cbbfb0;
-      --text: #1d1916;
-      --muted: #847566;
-      --input-bg: #f5f0e8;
-      --accent-glow: rgba(234, 88, 12, 0.08);
-      --gold-glow: rgba(245, 158, 11, 0.08);
-    }
+  :root,
+  [data-theme="dark"] {
+    --bg: #131314;
+    --surface: #1e1f20;
+    --surface-2: #282a2c;
+    --surface-hover: #303235;
+    --input-bg: #131314;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --text: #e3e3e3;
+    --text-secondary: #c4c7c5;
+    --muted: #8e918f;
+    --accent: #a8c7fa;
+    --accent-solid: #8ab4f8;
+    --accent-on-solid: #062e6f;
+    --accent-soft: rgba(168, 199, 250, 0.14);
+    --accent-border: rgba(168, 199, 250, 0.32);
+    --ok: #81c995;
+    --ok-soft: rgba(129, 201, 149, 0.14);
+    --warn: #fdd663;
+    --warn-soft: rgba(253, 214, 99, 0.14);
+    --err: #f28b82;
+    --err-solid: #ea4335;
+    --err-soft: rgba(242, 139, 130, 0.12);
+    --err-border: rgba(242, 139, 130, 0.35);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.35);
+    --modal-backdrop: rgba(0, 0, 0, 0.68);
+    --switch-track: #3c4043;
+    --switch-thumb: #c4c7c5;
+    --switch-checked-thumb: #062e6f;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  [data-theme="oled"] {
+    --bg: #000000;
+    --surface: #0e0e10;
+    --surface-2: #17181b;
+    --surface-hover: #212226;
+    --input-bg: #000000;
+    --border: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text: #ececec;
+    --text-secondary: #c4c7c5;
+    --muted: #8a8d91;
+    --accent: #a8c7fa;
+    --accent-solid: #8ab4f8;
+    --accent-on-solid: #062e6f;
+    --accent-soft: rgba(168, 199, 250, 0.14);
+    --accent-border: rgba(168, 199, 250, 0.32);
+    --ok: #81c995;
+    --ok-soft: rgba(129, 201, 149, 0.14);
+    --warn: #fdd663;
+    --warn-soft: rgba(253, 214, 99, 0.14);
+    --err: #f28b82;
+    --err-solid: #ea4335;
+    --err-soft: rgba(242, 139, 130, 0.12);
+    --err-border: rgba(242, 139, 130, 0.35);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 12px 32px rgba(0, 0, 0, 0.55);
+    --modal-backdrop: rgba(0, 0, 0, 0.82);
+    --switch-track: #2c2e33;
+    --switch-thumb: #c4c7c5;
+    --switch-checked-thumb: #062e6f;
+  }
+
+  [data-theme="light"] {
+    --bg: #ffffff;
+    --surface: #f0f4f9;
+    --surface-2: #e3e9f2;
+    --surface-hover: #d8e2f0;
+    --input-bg: #ffffff;
+    --border: rgba(31, 31, 31, 0.08);
+    --border-strong: rgba(31, 31, 31, 0.15);
+    --text: #1f1f1f;
+    --text-secondary: #444746;
+    --muted: #5e5e5e;
+    --accent: #0b57d0;
+    --accent-solid: #0b57d0;
+    --accent-on-solid: #ffffff;
+    --accent-soft: #d3e3fd;
+    --accent-border: rgba(11, 87, 208, 0.28);
+    --ok: #146c2e;
+    --ok-soft: #c4eed0;
+    --warn: #8c5a00;
+    --warn-soft: #ffefc3;
+    --err: #b3261e;
+    --err-solid: #b3261e;
+    --err-soft: #f9dedc;
+    --err-border: rgba(179, 38, 30, 0.28);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 12px 28px rgba(11, 87, 208, 0.08);
+    --modal-backdrop: rgba(15, 23, 42, 0.42);
+    --switch-track: #c4c7c5;
+    --switch-thumb: #ffffff;
+    --switch-checked-thumb: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
     color: var(--text);
     -webkit-font-smoothing: antialiased;
     min-height: 100vh;
-    padding: 36px 20px 60px;
-    background-image: 
-      radial-gradient(ellipse 60% 40% at 50% -10%, rgba(234, 88, 12, 0.12), transparent 70%),
-      radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.04), transparent 40%);
+    line-height: 1.5;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
-  .container {
-    max-width: 960px;
+  .app-shell {
+    max-width: 1040px;
     margin: 0 auto;
+    padding: 20px 20px 64px;
   }
 
-  /* Hero Section */
-  .hero {
-    text-align: center;
-    padding: 10px 0 32px;
-    position: relative;
+  /* Top Navigation Bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 6px 0 20px;
+    flex-wrap: wrap;
   }
-  .hero-badge {
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .brand-text {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .brand-title {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .status-pill {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    padding: 5px 14px;
-    background: var(--card);
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gold);
-    box-shadow: 0 2px 10px var(--gold-glow);
-    margin-bottom: 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
   }
-  .hero-badge .status-dot {
-    width: 6px;
-    height: 6px;
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: var(--ok);
-    box-shadow: 0 0 8px var(--ok);
-    animation: pulse 2.2s infinite ease-in-out;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.85); }
+    box-shadow: 0 0 0 3px var(--ok-soft);
+    flex-shrink: 0;
   }
 
-  /* Mortal Kombat Inspired Title */
-  .logo-mk {
-    font-family: 'Cinzel Decorative', 'Cinzel', serif;
-    font-size: 42px;
-    font-weight: 900;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    background: linear-gradient(180deg, #FFF7ED 0%, #FDE68A 25%, #F59E0B 55%, #D9480F 82%, #7C1D05 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 4px 18px rgba(217, 72, 15, 0.35));
-    line-height: 1.1;
-    margin-bottom: 10px;
-    position: relative;
-    display: inline-block;
-  }
-  .logo-mk::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 20%;
-    right: 20%;
-    height: 1.5px;
-    background: linear-gradient(90deg, transparent, var(--flame), var(--gold), transparent);
+  .status-dot.danger {
+    background: var(--err);
+    box-shadow: 0 0 0 3px var(--err-soft);
   }
 
-  .hero-subtitle {
-    font-size: 14.5px;
-    font-weight: 500;
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .uptime-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 12px;
     color: var(--muted);
-    letter-spacing: 0.02em;
-    margin-top: 14px;
+    font-variant-numeric: tabular-nums;
   }
-  .hero-subtitle strong {
+
+  .theme-switch {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px;
+    border-radius: 9999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    gap: 2px;
+  }
+
+  .theme-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 11px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .theme-btn:hover {
     color: var(--text);
+  }
+
+  .theme-btn.active {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+
+  /* Active Policy Chips Row */
+  .policy-strip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .policy-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .policy-chip.accent {
+    background: var(--accent-soft);
+    border-color: var(--accent-border);
+    color: var(--accent);
+  }
+
+  .policy-chip.warn {
+    background: var(--warn-soft);
+    border-color: transparent;
+    color: var(--warn);
+  }
+
+  .policy-chip.danger {
+    background: var(--err-soft);
+    border-color: var(--err-border);
+    color: var(--err);
+  }
+
+  /* Danger Banner */
+  .danger-banner {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px;
+    border-radius: 20px;
+    background: var(--err-soft);
+    border: 1px solid var(--err-border);
+    color: var(--text);
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .danger-banner.visible {
+    display: flex;
+  }
+
+  .danger-banner-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .danger-banner-body svg {
+    color: var(--err);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .danger-banner strong {
+    color: var(--err);
     font-weight: 600;
   }
-  .hero-subtitle .glow-text {
-    background: linear-gradient(135deg, #F59E0B, #EA580C);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 700;
-  }
 
-  /* Grid Layout (Desktop 2-column) */
+  /* Main Layout Grid */
   .grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
   }
+
   .span-full {
     grid-column: 1 / -1;
   }
-  @media (max-width: 720px) {
-    .grid { grid-template-columns: 1fr; }
-    .span-full { grid-column: auto; }
-    .logo-mk { font-size: 32px; letter-spacing: 0.12em; }
+
+  /* Surface Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 20px 22px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
   }
 
-  /* Cards */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 22px;
-    transition: all 0.2s ease;
-    position: relative;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  }
   .card:hover {
-    border-color: var(--border-hover);
-    box-shadow: 0 6px 24px var(--accent-glow);
+    border-color: var(--border-strong);
   }
+
   .card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
     margin-bottom: 16px;
+    flex-wrap: wrap;
   }
+
+  .card-header.compact-collapsed {
+    margin-bottom: 0;
+  }
+
+  .card-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: var(--surface-2);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
   .card-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-subtitle {
+    font-size: 12px;
     color: var(--muted);
+  }
+
+  .count-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .count-badge.ok {
+    background: var(--ok-soft);
+    color: var(--ok);
+  }
+
+  /* Inputs & Buttons */
+  .endpoint-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 6px 6px 14px;
+    border-radius: 9999px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-strong);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .endpoint-bar:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .endpoint-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    outline: none;
+  }
+
+  .input-row {
     display: flex;
     align-items: center;
     gap: 8px;
   }
-  .card-title svg {
-    color: var(--gold);
-    width: 14px;
-    height: 14px;
-  }
 
-  /* Input & Button Groups */
-  .input-row {
-    display: flex;
-    gap: 8px;
-  }
-  .input-text {
+  .text-input {
     flex: 1;
     min-width: 0;
-    padding: 11px 14px;
+    padding: 10px 14px;
+    border-radius: 14px;
     background: var(--input-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
     color: var(--text);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size: 12.5px;
     outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  .input-text:focus {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 2px var(--gold-glow);
+
+  .text-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .search-input {
+    flex: 1;
+    min-width: 180px;
+    padding: 8px 14px;
+    border-radius: 9999px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12.5px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
 
   .btn {
@@ -952,623 +1220,1476 @@ const DASHBOARD_HTML = `<!DOCTYPE html>
     align-items: center;
     justify-content: center;
     gap: 7px;
-    padding: 10px 18px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 12.5px;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    border: 1px solid var(--border);
-    background: var(--card-elevated);
+    padding: 8px 15px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-2);
     color: var(--text);
-    transition: all 0.15s ease;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
     white-space: nowrap;
-    text-decoration: none;
-  }
-  .btn:hover {
-    background: var(--border-hover);
-    transform: translateY(-1px);
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, #f59e0b, #d9480f);
-    border-color: #d9480f;
-    color: #fff;
-    box-shadow: 0 2px 10px rgba(217, 72, 15, 0.3);
-  }
-  .btn-primary:hover {
-    background: linear-gradient(135deg, #fbbf24, #ea580c);
-    box-shadow: 0 4px 14px rgba(217, 72, 15, 0.45);
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
   }
 
-  /* Quick Connect Connectors Strip */
-  .connectors-strip {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 10px;
-    margin-top: 14px;
+  .btn:hover {
+    background: var(--surface-hover);
   }
+
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background: var(--accent-solid);
+    border-color: transparent;
+    color: var(--accent-on-solid);
+    font-weight: 600;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.06);
+    background: var(--accent-solid);
+  }
+
+  .btn-danger {
+    background: var(--err-solid);
+    border-color: transparent;
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .btn-danger:hover {
+    filter: brightness(1.08);
+    background: var(--err-solid);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text-secondary);
+  }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .icon-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .icon-close:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+
+  /* Tunnel & Connectors (inside Endpoint Modal) */
+  .tunnel-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .tunnel-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .segmented {
+    display: inline-flex;
+    padding: 3px;
+    border-radius: 9999px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    gap: 2px;
+  }
+
+  .seg-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .seg-btn:hover {
+    color: var(--text);
+  }
+
+  .seg-btn.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .error-inline {
+    font-size: 12px;
+    color: var(--err);
+  }
+
+  .connectors-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+
   .connector-card {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 11px 15px;
-    border-radius: var(--radius-sm);
-    background: var(--card-elevated);
-    border: 1px solid var(--border);
+    gap: 10px;
+    padding: 11px 12px;
+    border-radius: 16px;
+    background: var(--surface-2);
+    border: 1px solid transparent;
     color: var(--text);
     text-decoration: none;
-    transition: all 0.15s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   }
+
   .connector-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--gold);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
   }
+
+  .connector-card.featured {
+    border-color: var(--accent-border);
+    background: linear-gradient(135deg, var(--surface-2), var(--accent-soft));
+  }
+
   .connector-card svg {
     width: 22px;
     height: 22px;
     flex-shrink: 0;
   }
-  .connector-info {
-    display: flex;
-    flex-direction: column;
+
+  .connector-meta {
     min-width: 0;
-  }
-  .connector-info .c-name {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.2;
-  }
-  .connector-info .c-step {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 3px;
-    letter-spacing: 0.02em;
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  /* Recent Projects */
-  .recents-label {
-    font-size: 10.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin: 16px 0 8px;
-  }
-  .recent-item {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    text-align: left;
-    padding: 9px 12px;
-    margin-bottom: 5px;
-    background: var(--input-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .recent-item:hover {
-    background: var(--card-elevated);
-    border-color: var(--muted);
-  }
-  .recent-item.active {
-    border-color: var(--gold);
-    background: rgba(245, 158, 11, 0.08);
-  }
-  .recent-item .tag {
-    margin-left: auto;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #fff;
-    padding: 2px 7px;
-    background: linear-gradient(135deg, #f59e0b, #ea580c);
-    border-radius: 4px;
-  }
-
-  /* Toggle Settings */
-  .toggle-group {
     display: flex;
     flex-direction: column;
-    gap: 14px;
   }
-  .toggle-item {
+
+  .connector-name {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .connector-hint {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Telemetry Strip */
+  .telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 15px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .metric-card.clickable {
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+  }
+
+  .metric-card.clickable:hover {
+    border-color: var(--accent-border);
+    background: var(--surface-2);
+  }
+
+  .metric-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
   }
-  .toggle-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+
+  .metric-val {
+    font-size: 25px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
   }
-  .toggle-item:first-child {
-    padding-top: 0;
+
+  .metric-val.err {
+    color: var(--err);
   }
-  .toggle-meta .t-title {
-    font-size: 13px;
-    font-weight: 600;
+
+  .metric-val.ok {
+    color: var(--ok);
+  }
+
+  /* Tools Drawer */
+  .tools-drawer {
+    display: none;
+    margin-top: 12px;
+    padding: 16px 18px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+
+  .tools-drawer.open {
+    display: block;
+  }
+
+  .tools-drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .tools-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tool-chip {
+    padding: 5px 11px;
+    border-radius: 9999px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+  }
+
+  /* Recent Projects List */
+  .section-sublabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin: 14px 0 8px;
+  }
+
+  .recent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .recent-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 9px 13px;
+    border-radius: 14px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .recent-item:hover {
+    background: var(--surface-2);
     color: var(--text);
   }
-  .toggle-meta .t-desc {
-    font-size: 11.5px;
+
+  .recent-item.active {
+    background: var(--accent-soft);
+    border-color: var(--accent-border);
+    color: var(--text);
+  }
+
+  .recent-path {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .recent-badge {
+    flex-shrink: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 9999px;
+    background: var(--accent-solid);
+    color: var(--accent-on-solid);
+  }
+
+  .form-msg {
+    min-height: 16px;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--err);
+  }
+
+  /* Security Toggles */
+  .toggle-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toggle-row:first-child {
+    padding-top: 2px;
+  }
+
+  .toggle-row:last-child {
+    border-bottom: none;
+    padding-bottom: 2px;
+  }
+
+  .toggle-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .toggle-title.danger {
+    color: var(--err);
+  }
+
+  .toggle-desc {
+    font-size: 12px;
     color: var(--muted);
     margin-top: 2px;
   }
 
-  /* Switch */
-  .switch {
+  .m3-switch {
     position: relative;
-    width: 44px;
-    height: 24px;
+    width: 48px;
+    height: 28px;
     flex-shrink: 0;
-    margin-left: 14px;
   }
-  .switch input {
+
+  .m3-switch input {
     opacity: 0;
     width: 0;
     height: 0;
   }
-  .slider {
+
+  .m3-slider {
     position: absolute;
-    cursor: pointer;
     inset: 0;
-    background: var(--border);
-    border-radius: 24px;
-    transition: background 0.2s ease;
+    border-radius: 9999px;
+    background: var(--switch-track);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
   }
-  .slider::before {
+
+  .m3-slider::before {
     content: '';
     position: absolute;
-    width: 18px;
-    height: 18px;
-    left: 3px;
-    bottom: 3px;
-    background: #fff;
+    width: 20px;
+    height: 20px;
+    left: 4px;
+    top: 4px;
     border-radius: 50%;
-    transition: transform 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    background: var(--switch-thumb);
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease;
   }
-  .switch input:checked + .slider {
-    background: linear-gradient(135deg, var(--gold), var(--flame));
+
+  .m3-switch input:checked + .m3-slider {
+    background: var(--accent-solid);
   }
-  .switch input:checked + .slider::before {
+
+  .m3-switch input:checked + .m3-slider::before {
     transform: translateX(20px);
-  }
-  .switch.danger input:checked + .slider {
-    background: var(--err);
+    background: var(--switch-checked-thumb);
   }
 
-  /* Warning Bar */
-  .danger-alert {
-    display: none;
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid var(--err);
-    border-radius: var(--radius);
-    padding: 13px 18px;
+  .m3-switch.danger input:checked + .m3-slider {
+    background: var(--err-solid);
+  }
+
+  .m3-switch.danger input:checked + .m3-slider::before {
+    background: #ffffff;
+  }
+
+  /* Filter Toolbar for Call History */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  /* Clean Table */
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
     font-size: 12.5px;
-    color: #fca5a5;
-    margin-bottom: 16px;
-    line-height: 1.5;
   }
 
-  /* Telemetry Grid */
-  .telemetry-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    text-align: center;
+  th, td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
   }
-  .telemetry-col {
-    padding: 6px 12px;
+
+  th {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--muted);
   }
-  .telemetry-col:not(:last-child) {
-    border-right: 1px solid var(--border);
+
+  tr:last-child td {
+    border-bottom: none;
   }
-  .telemetry-val {
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+
+  code.mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
     color: var(--text);
+    background: var(--input-bg);
+    padding: 3px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
   }
-  .telemetry-lbl {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+
+  .state-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+
+  .state-pill.ok {
+    background: var(--ok-soft);
+    color: var(--ok);
+  }
+
+  .state-pill.err {
+    background: var(--err-soft);
+    color: var(--err);
+  }
+
+  .state-pill.muted {
+    background: var(--surface-2);
+    color: var(--muted);
+  }
+
+  .empty-state {
+    padding: 24px 12px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Modals */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--modal-backdrop);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open {
+    display: flex;
+  }
+
+  .modal-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+
+  .modal-card.wide {
+    max-width: 680px;
+  }
+
+  .modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .modal-sub {
+    font-size: 12.5px;
     color: var(--muted);
     margin-top: 3px;
   }
 
-  /* Background jobs */
-  .jobs-panel {
-    display: none;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
-  th, td {
-    padding: 9px 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-  th {
-    color: var(--muted);
-    font-weight: 700;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+  .modal-body {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin-bottom: 22px;
   }
 
-  #msg {
-    color: var(--err);
-    font-size: 12px;
-    margin-top: 6px;
-    min-height: 16px;
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(16px);
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    padding: 10px 18px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 120;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Responsive */
+  @media (max-width: 820px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .connectors-grid {
+      grid-template-columns: 1fr;
+    }
+    .telemetry-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 520px) {
+    .app-shell {
+      padding: 14px 14px 48px;
+    }
+    .card {
+      padding: 16px;
+      border-radius: 20px;
+    }
+    .endpoint-bar {
+      border-radius: 16px;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 10px;
+    }
+    .input-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
   }
 </style>
 </head>
 <body>
-<div class="container">
-  
-  <!-- Hero Section -->
-  <header class="hero">
-    <div class="hero-badge">
-      <span class="status-dot"></span>
-      <span id="statusLine">INITIALIZING...</span>
+<div class="app-shell">
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
+          <path d="M26 17H19C14.58 17 11 20.58 11 25V39C11 43.42 14.58 47 19 47H26" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+          <path d="M38 17H45C49.42 17 53 20.58 53 25V39C53 43.42 49.42 47 45 47H38" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M23 32H41" stroke="var(--ok)" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="23" cy="32" r="3.8" fill="currentColor"/>
+          <circle cx="41" cy="32" r="3.8" fill="var(--accent)"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1 class="brand-title">Easy MCP</h1>
+        <div class="status-pill" id="statusPill">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusText">Online</span>
+        </div>
+      </div>
     </div>
-    <br>
-    <div class="logo-mk">EASY MCP</div>
-    <p class="hero-subtitle">
-      Double your quota with <span class="glow-text">Antigravity</span>, <span class="glow-text">Claude Code</span>, <span class="glow-text">Codex</span> and more
-    </p>
+
+    <div class="topbar-actions">
+      <button type="button" class="btn btn-primary" id="btnOpenEndpoint">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        MCP Endpoint
+      </button>
+      <div class="uptime-pill" id="stUptime">Uptime 0m 0s</div>
+      <div class="theme-switch" role="group" aria-label="Theme">
+        <button type="button" class="theme-btn active" data-set-theme="dark">Dark</button>
+        <button type="button" class="theme-btn" data-set-theme="oled">OLED</button>
+        <button type="button" class="theme-btn" data-set-theme="light">Light</button>
+      </div>
+    </div>
   </header>
 
-  <!-- Danger banner if jail disabled -->
-  <div class="danger-alert" id="jailWarn">
-    <strong>⚠ CRITICAL SECURITY ALERT:</strong> Folder jail is completely disabled (<kbd>--dangerously-skip-jail</kbd>). Connected AI clients have unrestrained read, write, and command execution access to the entire file system.
+  <!-- Active Context / Policy Chips -->
+  <div class="policy-strip" id="policyStrip"></div>
+
+  <!-- Jail Disabled Warning -->
+  <div class="danger-banner" id="jailWarn" role="alert">
+    <div class="danger-banner-body">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <div>
+        <strong>Folder jail is disabled.</strong> Connected AI clients can read, write, and execute commands anywhere on this machine, not just inside the active project folder.
+      </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-danger" id="btnRestoreJail">Re-enable Jail</button>
   </div>
 
+  <!-- Main Grid -->
   <div class="grid">
 
-    <!-- Card 1: MCP Tunnel Endpoint & Integrations (Full Width) -->
-    <div class="card span-full">
-      <div class="card-header">
-        <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          Direct MCP Tunnel Endpoint
+    <!-- Telemetry Strip -->
+    <div class="span-full">
+      <div class="telemetry-grid">
+        <div class="metric-card">
+          <div class="metric-top"><span>Total calls</span></div>
+          <div class="metric-val" id="stCalls">0</div>
         </div>
-        <span style="font-size: 11px; color: var(--muted);" id="stUptime">⏱ Uptime: --</span>
-      </div>
-
-      <div class="input-row">
-        <input type="text" class="input-text" id="mcpUrl" readonly value="(establishing tunnel...)">
-        <button class="btn btn-primary" onclick="copyEl('mcpUrl', this)">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copy Link
+        <div class="metric-card">
+          <div class="metric-top"><span>Errors</span></div>
+          <div class="metric-val" id="stErrors">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-top"><span>Active sessions</span></div>
+          <div class="metric-val ok" id="stSessions">0</div>
+        </div>
+        <button type="button" class="metric-card clickable" id="btnToggleTools" aria-expanded="false">
+          <div class="metric-top">
+            <span>Registered tools</span>
+            <span id="toolsArrow">Inspect ›</span>
+          </div>
+          <div class="metric-val" id="stTools">0</div>
         </button>
       </div>
 
-      <div style="display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap;">
-        <span style="font-size:12px; color:var(--muted);">Tunnel:</span>
-        <div style="display:inline-flex; border:1px solid var(--border); border-radius:10px; overflow:hidden;">
-          <button id="tunCloudflare" onclick="setTunnel('cloudflare')" style="padding:7px 14px; font-size:12.5px; border:none; cursor:pointer; background:transparent; color:inherit;">Cloudflare</button>
-          <button id="tunFunnel" onclick="setTunnel('funnel')" style="padding:7px 14px; font-size:12.5px; border:none; cursor:pointer; background:transparent; color:inherit;">Tailscale · persistent link</button>
+      <div class="tools-drawer" id="toolsDrawer">
+        <div class="tools-drawer-head">
+          <span class="field-label">Exposed MCP Tools</span>
+          <button type="button" class="btn btn-sm btn-ghost" id="btnCloseTools">Close</button>
         </div>
-        <span id="tunError" style="font-size:12px; color:#e5484d;"></span>
-      </div>
-
-      <div class="connectors-strip">
-        <!-- Claude Web / Plugins -->
-        <a class="connector-card" href="https://claude.ai/plugins" target="_blank" title="Add custom MCP connector to Claude">
-          <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#D97757"/><path d="M12 4.5l1.8 5.4h5.7l-4.6 3.4 1.8 5.5-4.7-3.4-4.7 3.4 1.8-5.5-4.6-3.4h5.7z" fill="#FFF"/></svg>
-          <div class="connector-info">
-            <span class="c-name">Claude Plugins</span>
-            <span class="c-step">Add › Add custom connector</span>
-          </div>
-        </a>
-
-        <!-- ChatGPT Plugins -->
-        <a class="connector-card" href="https://chatgpt.com/plugins" target="_blank" title="Add custom MCP server to ChatGPT">
-          <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#10A37F"/><path d="M12 4a8 8 0 0 0-8 8c0 4.42 3.58 8 8 8s8-3.58 8-8a8 8 0 0 0-8-8zm0 2.5a5.5 5.5 0 0 1 5.5 5.5c0 1.25-.42 2.4-1.12 3.33l1.82 1.05a7.5 7.5 0 0 0-6.2-9.88V6.5zm-5.5 5.5a5.5 5.5 0 0 1 3.33-5.06V4.84a7.5 7.5 0 0 0-5.33 7.16h2zm3.33 5.06a5.5 5.5 0 0 1-3.33-5.06H4.5a7.5 7.5 0 0 0 9.77 7.02l-1.05-1.82a5.47 5.47 0 0 1-3.39-.14z" fill="#FFF"/></svg>
-          <div class="connector-info">
-            <span class="c-name">ChatGPT Plugins</span>
-            <span class="c-step">Add › Add custom MCP server</span>
-          </div>
-        </a>
-
-        <!-- Gemini Connectors -->
-        <a class="connector-card" href="https://gemini.google.com/customize/connectors" target="_blank" title="Add connector to Gemini">
-          <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1E293B"/><path d="M12 3C12 7.97 7.97 12 3 12C7.97 12 12 16.03 12 21C12 16.03 16.03 12 21 12C16.03 12 12 7.97 12 3Z" fill="url(#geminiGrad)"/><defs><linearGradient id="geminiGrad" x1="3" y1="3" x2="21" y2="21"><stop stop-color="#4285F4"/><stop offset="0.5" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs></svg>
-          <div class="connector-info">
-            <span class="c-name">Gemini Connectors</span>
-            <span class="c-step">Add connector</span>
-          </div>
-        </a>
+        <div class="tools-chips" id="toolsList"></div>
       </div>
     </div>
 
-    <!-- Card 2: Active Workspace (Left Column) -->
-    <div class="card">
+    <!-- Active Workspace -->
+    <section class="card">
       <div class="card-header">
-        <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-          Active Project Workspace
+        <div class="card-title-group">
+          <div class="card-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="card-title">Active Workspace</h2>
+            <p class="card-subtitle">Root folder scoped for MCP operations</p>
+          </div>
         </div>
       </div>
 
       <div class="input-row">
-        <input type="text" class="input-text" id="projectPath" placeholder="C:\\path\\to\\project" onkeydown="if(event.key==='Enter') setProject()">
-        <button class="btn" id="pickBtn" onclick="pickFolder(this)">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z"/></svg>
-          Browse
+        <input type="text" class="text-input" id="projectPath" placeholder="/home/user/project" aria-label="Project folder path">
+        <button type="button" class="btn" id="btnSetProject">Set</button>
+        <button type="button" class="btn btn-ghost" id="btnPickFolder">Browse</button>
+      </div>
+
+      <div class="section-sublabel">Recent workspaces</div>
+      <div class="recent-list" id="recentList"></div>
+      <div class="form-msg" id="msg" aria-live="polite"></div>
+    </section>
+
+    <!-- Security & Policies -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="card-title">Security &amp; Policies</h2>
+            <p class="card-subtitle">Live guardrails enforced by the server</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="toggle-list">
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-title">Read-only mode</div>
+            <div class="toggle-desc">Blocks file writes, edits, and deletions</div>
+          </div>
+          <label class="m3-switch" aria-label="Read-only mode">
+            <input type="checkbox" id="togReadOnly">
+            <span class="m3-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-title">Disable shell execution</div>
+            <div class="toggle-desc">Blocks terminal commands and background jobs</div>
+          </div>
+          <label class="m3-switch" aria-label="Disable shell execution">
+            <input type="checkbox" id="togDisableShell">
+            <span class="m3-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-title danger">Disable folder jail</div>
+            <div class="toggle-desc">Allows access to the entire filesystem outside the workspace</div>
+          </div>
+          <label class="m3-switch danger" aria-label="Disable folder jail">
+            <input type="checkbox" id="togSkipJail">
+            <span class="m3-slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Background Jobs (Always visible, separate card) -->
+    <section class="card span-full">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="card-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="3"/>
+              <path d="M7 15l3-3-3-3"/>
+              <line x1="13" y1="15" x2="17" y2="15"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="card-title">
+              Background Jobs
+              <span class="count-badge ok" id="badgeJobs">0 running</span>
+            </h2>
+            <p class="card-subtitle">Always-visible processes started via MCP</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Job ID</th>
+              <th>Command</th>
+              <th>Status</th>
+              <th>Started</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="jobsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Call History (Separate, collapsible + filterable) -->
+    <section class="card span-full">
+      <div class="card-header" id="callsHeader">
+        <div class="card-title-group">
+          <div class="card-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="card-title">
+              Call History
+              <span class="count-badge" id="badgeCalls">0</span>
+            </h2>
+            <p class="card-subtitle">Recent MCP tool invocations with live filtering</p>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-sm btn-ghost" id="btnToggleCalls" aria-expanded="true">
+          <span id="toggleCallsLabel">Hide</span>
         </button>
       </div>
 
-      <div class="recents-label">Recent Workspaces</div>
-      <div id="recent"></div>
-      <div id="msg"></div>
-    </div>
+      <div id="callsSectionBody">
+        <div class="filter-bar">
+          <input type="text" class="search-input" id="callsSearch" placeholder="Filter by tool name (e.g. read_file, git)..." aria-label="Filter calls by tool name">
+          <div class="segmented" role="group" aria-label="Filter calls by status">
+            <button type="button" class="seg-btn active" data-call-status="all">All</button>
+            <button type="button" class="seg-btn" data-call-status="ok">OK</button>
+            <button type="button" class="seg-btn" data-call-status="error">Errors</button>
+          </div>
+        </div>
 
-    <!-- Card 3: Security & Policies (Right Column) -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Security & Access Policies
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Status</th>
+                <th>Duration</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="callsBody"></tbody>
+          </table>
         </div>
       </div>
-
-      <div class="toggle-group">
-        <div class="toggle-item">
-          <div class="toggle-meta">
-            <div class="t-title">Read-Only Mode</div>
-            <div class="t-desc">Prohibits all file writes and deletions</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="togReadOnly" onchange="saveSetting('readOnly', this.checked)">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-item">
-          <div class="toggle-meta">
-            <div class="t-title">Disable Shell Execution</div>
-            <div class="t-desc">Blocks terminal commands and child processes</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="togDisableShell" onchange="saveSetting('disableShell', this.checked)">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-item">
-          <div class="toggle-meta">
-            <div class="t-title" style="color: var(--err);">⚠ Disable Folder Jail</div>
-            <div class="t-desc">Allows AI to access the entire filesystem instead of just the project folder. <strong>Dangerous.</strong></div>
-          </div>
-          <label class="switch danger">
-            <input type="checkbox" id="togSkipJail" onchange="toggleJail(this.checked)">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="telemetry-col">
-          <div class="telemetry-val" id="stErrors">0</div>
-          <div class="telemetry-lbl">Errors Encountered</div>
-        </div>
-        <div class="telemetry-col">
-          <div class="telemetry-val" id="stSessions">0</div>
-          <div class="telemetry-lbl">Active Sessions</div>
-        </div>
-        <div class="telemetry-col">
-          <div class="telemetry-val" id="stTools">18</div>
-          <div class="telemetry-lbl">Registered Tools</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 5: Background Jobs (Conditionally shown) -->
-    <div class="card span-full jobs-panel" id="jobsCard">
-      <div class="card-header">
-        <div class="card-title">Active Background Jobs</div>
-      </div>
-      <table><tbody id="jobsBody"></tbody></table>
-    </div>
-
-    <!-- Share AI Slot promo (dismissible banner, bottom-right) -->
-    <div id="slotPromo" style="position:fixed;right:16px;bottom:16px;width:300px;max-width:calc(100vw - 32px);z-index:999;background:var(--card,#171512);border:1px solid rgba(245,158,11,.45);border-radius:14px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.45);">
-      <button onclick="closeSlotPromo()" title="Close" style="position:absolute;top:6px;right:10px;background:none;border:none;color:inherit;font-size:16px;cursor:pointer;opacity:.7;">×</button>
-      <div style="font-size:14px;font-weight:700;padding-right:18px;">Need a Google family slot or an AI subscription? Got a spare one to sell?</div>
-      <div style="margin-top:6px;font-size:12.5px;opacity:.85;">From $1/month, varies by country — every family member gets their own Gemini quota.</div>
-      <a href="https://mrkaylabs.github.io/share-ai-slot/" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;padding:8px 18px;border-radius:999px;background:linear-gradient(90deg,#f59e0b,#ea580c);color:#fff;font-weight:700;text-decoration:none;font-size:13px;">Share AI Slot →</a>
-    </div>
+    </section>
 
   </div>
 </div>
 
+<!-- MCP Endpoint Popup Modal -->
+<div class="modal-overlay" id="endpointModal" role="dialog" aria-modal="true" aria-labelledby="endpointModalTitle">
+  <div class="modal-card wide">
+    <div class="modal-head">
+      <div>
+        <h3 class="modal-title" id="endpointModalTitle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          MCP Endpoint
+        </h3>
+        <p class="modal-sub">Paste this URL into your AI client to connect this workspace</p>
+      </div>
+      <button type="button" class="icon-close" id="btnCloseEndpoint" aria-label="Close endpoint popup">&times;</button>
+    </div>
+
+    <div class="endpoint-bar">
+      <input type="text" class="endpoint-input" id="mcpUrl" readonly aria-label="MCP Endpoint URL">
+      <button type="button" class="btn btn-primary" id="btnCopyUrl">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <rect x="9" y="9" width="13" height="13" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        <span id="copyBtnLabel">Copy link</span>
+      </button>
+    </div>
+
+    <div class="tunnel-row">
+      <div class="tunnel-left">
+        <span class="field-label">Tunnel</span>
+        <div class="segmented" role="group" aria-label="Tunnel provider">
+          <button type="button" class="seg-btn" id="tunCloudflare" data-tunnel="cloudflare">Cloudflare</button>
+          <button type="button" class="seg-btn" id="tunFunnel" data-tunnel="funnel">Tailscale · Persistent</button>
+        </div>
+        <span class="error-inline" id="tunError"></span>
+      </div>
+      <span class="field-label" id="localDashUrl">Local: http://127.0.0.1:8787/</span>
+    </div>
+
+    <div class="connectors-grid">
+      <a class="connector-card featured" href="https://gemini.google.com/customize/connectors" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect width="24" height="24" rx="7" fill="#131314"/>
+          <path d="M12 4C12 8.42 8.42 12 4 12C8.42 12 12 15.58 12 20C12 15.58 15.58 12 20 12C15.58 12 12 8.42 12 4Z" fill="url(#geminiIconGrad)"/>
+          <defs>
+            <linearGradient id="geminiIconGrad" x1="4" y1="4" x2="20" y2="20" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#4285F4"/>
+              <stop offset="0.5" stop-color="#9B72CB"/>
+              <stop offset="1" stop-color="#D96570"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="connector-meta">
+          <span class="connector-name">Gemini</span>
+          <span class="connector-hint">Add connector</span>
+        </div>
+      </a>
+
+      <a class="connector-card" href="https://claude.ai/plugins" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect width="24" height="24" rx="7" fill="#D97757"/>
+          <path d="M12 5l1.6 4.8h5l-4 3 1.5 4.8-4.1-3-4.1 3 1.5-4.8-4-3h5z" fill="#FFF"/>
+        </svg>
+        <div class="connector-meta">
+          <span class="connector-name">Claude</span>
+          <span class="connector-hint">Add custom connector</span>
+        </div>
+      </a>
+
+      <a class="connector-card" href="https://chatgpt.com/plugins" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect width="24" height="24" rx="7" fill="#10A37F"/>
+          <circle cx="12" cy="12" r="5.5" stroke="#FFF" stroke-width="2"/>
+          <circle cx="12" cy="12" r="2" fill="#FFF"/>
+        </svg>
+        <div class="connector-meta">
+          <span class="connector-name">ChatGPT</span>
+          <span class="connector-hint">Add custom MCP</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal for Disabling Folder Jail -->
+<div class="modal-overlay" id="jailModal" role="dialog" aria-modal="true" aria-labelledby="jailModalTitle">
+  <div class="modal-card">
+    <div class="modal-head" style="margin-bottom:10px;">
+      <h3 class="modal-title" id="jailModalTitle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--err)" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Disable folder jail?
+      </h3>
+    </div>
+    <p class="modal-body">
+      Connected AI clients will be able to read, modify, and run commands anywhere on your machine — not just inside the active workspace. Only enable this if you explicitly need system-wide access.
+    </p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="btnCancelJail">Cancel</button>
+      <button type="button" class="btn btn-danger" id="btnConfirmJail">Disable jail</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Feedback -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
-const ADMIN = '__EASY_MCP_ADMIN__';
-const q = '';
+(function() {
+  const ADMIN = '__EASY_MCP_ADMIN__';
+  const ui = {
+    connected: true,
+    toolsOpen: false,
+    callsCollapsed: false,
+    callSearch: '',
+    callStatusFilter: 'all',
+    lastData: null
+  };
 
-function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  let toastTimer = null;
 
-function copyEl(id, btn){
-  const el = document.getElementById(id);
-  el.select();
-  navigator.clipboard.writeText(el.value).then(() => {
-    const orig = btn.innerHTML;
-    btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-    setTimeout(() => { btn.innerHTML = orig; }, 1400);
-  });
-}
-
-async function setTunnel(mode){
-  document.getElementById('mcpUrl').value = '(switching tunnel...)';
-  await fetch('/api/set-tunnel' + q, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Easy-Mcp-Admin': ADMIN },
-    body: JSON.stringify({ mode })
-  });
-  tick();
-}
-
-async function setProject(pathOverride){
-  const p = pathOverride || document.getElementById('projectPath').value.trim();
-  if (!p) return;
-  const res = await fetch('/api/set-project' + q, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Easy-Mcp-Admin': ADMIN },
-    body: JSON.stringify({ path: p })
-  });
-  const d = await res.json();
-  document.getElementById('msg').textContent = d.success ? '' : (d.error || 'Failed to update folder');
-  tick();
-}
-
-async function pickFolder(btn){
-  const orig = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = 'Browsing...';
-  document.getElementById('msg').textContent = '';
-  try {
-    const res = await fetch('/api/pick-folder' + q, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Easy-Mcp-Admin': ADMIN },
-      body: '{}'
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function(c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
     });
-    const d = await res.json();
-    if (!d.success && d.error !== 'No folder selected') {
-      document.getElementById('msg').textContent = d.error || 'Selection failed';
+  }
+
+  function fmtUptime(s) {
+    if (s < 60) return s + 's';
+    if (s < 3600) return Math.floor(s / 60) + 'm ' + (s % 60) + 's';
+    var h = Math.floor(s / 3600);
+    var m = Math.floor((s % 3600) / 60);
+    return h + 'h ' + m + 'm';
+  }
+
+  function fmtTime(iso) {
+    try {
+      var d = new Date(iso);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    } catch (e) {
+      return '--:--:--';
     }
-  } catch (e) {
-    document.getElementById('msg').textContent = 'Folder picker failed';
   }
-  btn.disabled = false;
-  btn.innerHTML = orig;
-  tick();
-}
 
-async function saveSetting(key, value){
-  try {
-    const body = {};
-    body[key] = value;
-    await fetch('/api/settings' + q, {
+  function showToast(message) {
+    var el = document.getElementById('toast');
+    el.textContent = message;
+    el.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() {
+      el.classList.remove('show');
+    }, 2200);
+  }
+
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem('easy_mcp_theme', theme); } catch (e) {}
+    document.querySelectorAll('[data-set-theme]').forEach(function(btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-set-theme') === theme);
+    });
+  }
+
+  function apiPost(url, payload) {
+    return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Easy-Mcp-Admin': ADMIN },
-      body: JSON.stringify(body)
-    });
-    tick();
-  } catch (e) {
-    console.error('Settings update failed', e);
+      body: JSON.stringify(payload || {})
+    }).then(function(res) { return res.json(); });
   }
-}
 
-async function toggleJail(checked){
-  if (checked) {
-    const yes = confirm(
-      '⚠ DANGEROUS: This will disable the folder jail.\\n\\n' +
-      'Connected AI clients will be able to read, write, and execute commands ANYWHERE on this machine — not just inside the project folder.\\n\\n' +
-      'Are you absolutely sure?'
-    );
-    if (!yes) {
-      document.getElementById('togSkipJail').checked = false;
+  function render() {
+    var d = ui.lastData;
+    var statusDot = document.getElementById('statusDot');
+    var statusText = document.getElementById('statusText');
+
+    if (!ui.connected) {
+      statusDot.classList.add('danger');
+      statusText.textContent = 'Disconnected';
       return;
     }
-  }
-  await saveSetting('skipJail', checked);
-}
+    if (!d) return;
 
-async function stopJob(id){
-  await fetch('/api/stop-job' + q, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Easy-Mcp-Admin': ADMIN },
-    body: JSON.stringify({ id })
-  });
-  tick();
-}
+    statusDot.classList.toggle('danger', Boolean(d.skipJail));
+    statusText.textContent = d.skipJail ? 'Online · Jail bypassed' : 'Online';
 
-function fmtUptime(s){
-  if (s < 60) return s + 's';
-  if (s < 3600) return Math.floor(s/60) + 'm ' + (s%60) + 's';
-  return Math.floor(s/3600) + 'h ' + Math.floor((s%3600)/60) + 'm';
-}
+    document.getElementById('stUptime').textContent = 'Uptime ' + fmtUptime(d.uptimeSec || 0);
+    document.getElementById('localDashUrl').textContent = 'Local: ' + (d.dashboardUrl || window.location.origin + '/');
 
-async function tick(){
-  try {
-    const res = await fetch('/api/dashboard' + q, { headers: { 'X-Easy-Mcp-Admin': ADMIN } });
-    const d = await res.json();
-    
-    // Status line in badge
-    const badgeParts = ['ONLINE', d.project];
-    if (d.readOnly) badgeParts.push('READ-ONLY');
-    if (d.disableShell) badgeParts.push('SHELL OFF');
-    if (d.skipJail) badgeParts.push('JAIL BYPASSED');
-    document.getElementById('statusLine').textContent = badgeParts.join(' · ');
+    // Policy strip chips
+    var chips = [];
+    var proj = d.project || '';
+    var shortProj = proj.split(/[\\/]/).filter(Boolean).pop() || proj;
+    chips.push('<span class="policy-chip accent">Workspace: ' + esc(shortProj) + '</span>');
+    chips.push('<span class="policy-chip">Tunnel: ' + (d.tunnelMode === 'funnel' ? 'Tailscale Funnel' : 'Cloudflare') + '</span>');
+    if (d.readOnly) chips.push('<span class="policy-chip warn">Read-only</span>');
+    if (d.disableShell) chips.push('<span class="policy-chip warn">Shell disabled</span>');
+    if (d.skipJail) chips.push('<span class="policy-chip danger">Folder jail off</span>');
+    document.getElementById('policyStrip').innerHTML = chips.join('');
 
-    document.getElementById('jailWarn').style.display = d.skipJail ? 'block' : 'none';
-    document.getElementById('togReadOnly').checked = d.readOnly;
-    document.getElementById('togDisableShell').checked = d.disableShell;
-    document.getElementById('togSkipJail').checked = d.skipJail;
+    // Danger banner
+    document.getElementById('jailWarn').classList.toggle('visible', Boolean(d.skipJail));
 
-    document.getElementById('mcpUrl').value = d.mcpUrl || '(tunnel starting...)';
-    const tc = document.getElementById('tunCloudflare'), tf = document.getElementById('tunFunnel');
-    if (tc && tf) {
-      const on = 'background:var(--accent, #6c5ce7); color:#fff; font-weight:600;';
-      const off = 'background:transparent; color:inherit; font-weight:400;';
-      tc.style.cssText += (d.tunnelMode === 'cloudflare' ? on : off);
-      tf.style.cssText += (d.tunnelMode === 'funnel' ? on : off);
+    // Endpoint modal fields
+    document.getElementById('mcpUrl').value = d.mcpUrl || '(starting tunnel...)';
+    document.getElementById('tunCloudflare').classList.toggle('active', d.tunnelMode === 'cloudflare');
+    document.getElementById('tunFunnel').classList.toggle('active', d.tunnelMode === 'funnel');
+    document.getElementById('tunError').textContent = d.tunnelError || '';
+
+    // Project input
+    var pp = document.getElementById('projectPath');
+    if (document.activeElement !== pp) {
+      pp.value = proj;
     }
-    const te = document.getElementById('tunError');
-    if (te) te.textContent = d.tunnelError || '';
-    
-    const pp = document.getElementById('projectPath');
-    if (document.activeElement !== pp) pp.value = d.project;
 
-    // Recents
-    document.getElementById('recent').innerHTML = d.recentProjects.slice(0, 5).map(p =>
-      '<button class="recent-item' + (p === d.project ? ' active' : '') + '" onclick="setProject(' + JSON.stringify(p).replace(/"/g, '&quot;') + ')">' +
-      esc(p) + (p === d.project ? '<span class="tag">CURRENT</span>' : '') +
-      '</button>'
-    ).join('');
+    // Recent workspaces
+    var recents = Array.isArray(d.recentProjects) ? d.recentProjects : [];
+    document.getElementById('recentList').innerHTML = recents.slice(0, 5).map(function(p) {
+      var active = p === proj;
+      return '<button type="button" class="recent-item' + (active ? ' active' : '') + '" data-project="' + esc(p) + '">' +
+        '<span class="recent-path">' + esc(p) + '</span>' +
+        (active ? '<span class="recent-badge">Active</span>' : '') +
+        '</button>';
+    }).join('');
+
+    // Security switches
+    document.getElementById('togReadOnly').checked = Boolean(d.readOnly);
+    document.getElementById('togDisableShell').checked = Boolean(d.disableShell);
+    document.getElementById('togSkipJail').checked = Boolean(d.skipJail);
 
     // Telemetry
-    document.getElementById('stUptime').textContent = '⏱ Uptime: ' + fmtUptime(d.uptimeSec);
-    const elCalls = document.getElementById('stCalls'); if (elCalls) elCalls.textContent = d.totalCalls;
-    document.getElementById('stErrors').textContent = d.totalErrors;
-    document.getElementById('stSessions').textContent = d.sseSessions;
-    document.getElementById('stTools').textContent = d.toolsCount;
+    var totalCalls = d.totalCalls || 0;
+    var totalErrors = d.totalErrors || 0;
+    var toolNames = Array.isArray(d.toolNames) ? d.toolNames : [];
+    document.getElementById('stCalls').textContent = totalCalls;
+    var errEl = document.getElementById('stErrors');
+    errEl.textContent = totalErrors;
+    errEl.classList.toggle('err', totalErrors > 0);
+    document.getElementById('stSessions').textContent = d.sseSessions || 0;
+    document.getElementById('stTools').textContent = typeof d.toolsCount === 'number' ? d.toolsCount : toolNames.length;
 
-    // Background jobs
-    const jobsCard = document.getElementById('jobsCard');
-    jobsCard.style.display = d.jobs.length ? 'block' : 'none';
-    document.getElementById('jobsBody').innerHTML = d.jobs.map(j =>
-      '<tr><td>' + esc(j.id) + '</td><td><code>' + esc(j.command) + '</code></td><td>' + esc(j.status) + '</td><td>' +
-      (j.status === 'running' ? '<button class="btn" style="padding:4px 10px;font-size:11px;" onclick="stopJob(\\'' + j.id + '\\')">Stop</button>' : '') +
-      '</td></tr>'
-    ).join('');
+    // Tools drawer
+    var drawer = document.getElementById('toolsDrawer');
+    drawer.classList.toggle('open', ui.toolsOpen);
+    document.getElementById('btnToggleTools').setAttribute('aria-expanded', ui.toolsOpen ? 'true' : 'false');
+    document.getElementById('toolsArrow').textContent = ui.toolsOpen ? 'Hide' : 'Inspect ›';
+    document.getElementById('toolsList').innerHTML = toolNames.map(function(name) {
+      return '<span class="tool-chip">' + esc(name) + '</span>';
+    }).join('');
 
-  } catch (e) {
-    document.getElementById('statusLine').textContent = 'SERVER DISCONNECTED';
+    // Background Jobs (always visible)
+    var jobs = Array.isArray(d.jobs) ? d.jobs : [];
+    var runningJobsCount = jobs.filter(function(j) { return j.status === 'running'; }).length;
+    document.getElementById('badgeJobs').textContent = runningJobsCount + ' running';
+    var jobsBody = document.getElementById('jobsBody');
+    if (!jobs.length) {
+      jobsBody.innerHTML = '<tr><td colspan="5" class="empty-state">No background jobs active.</td></tr>';
+    } else {
+      jobsBody.innerHTML = jobs.map(function(j) {
+        var isRunning = j.status === 'running';
+        return '<tr>' +
+          '<td><code class="mono">' + esc(j.id) + '</code></td>' +
+          '<td><code class="mono">' + esc(j.command) + '</code></td>' +
+          '<td><span class="state-pill ' + (isRunning ? 'ok' : 'muted') + '">' + esc(j.status) + '</span></td>' +
+          '<td style="color:var(--muted);">' + esc(fmtTime(j.startedAt)) + '</td>' +
+          '<td>' + (isRunning ? '<button type="button" class="btn btn-sm btn-ghost" data-stop-job="' + esc(j.id) + '">Stop</button>' : '<span style="color:var(--muted);">—</span>') + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    // Call History (collapsible + filterable)
+    var calls = Array.isArray(d.recentCalls) ? d.recentCalls : [];
+    var callsBodyWrap = document.getElementById('callsSectionBody');
+    var callsHeader = document.getElementById('callsHeader');
+    callsBodyWrap.style.display = ui.callsCollapsed ? 'none' : 'block';
+    callsHeader.classList.toggle('compact-collapsed', ui.callsCollapsed);
+    document.getElementById('btnToggleCalls').setAttribute('aria-expanded', ui.callsCollapsed ? 'false' : 'true');
+    document.getElementById('toggleCallsLabel').textContent = ui.callsCollapsed ? 'Show' : 'Hide';
+
+    document.querySelectorAll('[data-call-status]').forEach(function(btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-call-status') === ui.callStatusFilter);
+    });
+
+    var query = ui.callSearch.trim().toLowerCase();
+    var filteredCalls = calls.filter(function(c) {
+      if (ui.callStatusFilter === 'ok' && !c.ok) return false;
+      if (ui.callStatusFilter === 'error' && c.ok) return false;
+      if (query && String(c.tool || '').toLowerCase().indexOf(query) === -1) return false;
+      return true;
+    });
+
+    var hasActiveFilter = Boolean(query) || ui.callStatusFilter !== 'all';
+    document.getElementById('badgeCalls').textContent = hasActiveFilter
+      ? filteredCalls.length + ' / ' + calls.length
+      : String(calls.length);
+
+    var callsBody = document.getElementById('callsBody');
+    if (!filteredCalls.length) {
+      callsBody.innerHTML = '<tr><td colspan="4" class="empty-state">' +
+        (hasActiveFilter ? 'No calls match the current filter.' : 'No tool calls recorded yet.') +
+        '</td></tr>';
+    } else {
+      callsBody.innerHTML = filteredCalls.slice(0, 30).map(function(c) {
+        return '<tr>' +
+          '<td><code class="mono">' + esc(c.tool) + '</code></td>' +
+          '<td><span class="state-pill ' + (c.ok ? 'ok' : 'err') + '">' + (c.ok ? 'OK' : 'Error') + '</span></td>' +
+          '<td>' + esc(c.ms) + ' ms</td>' +
+          '<td style="color:var(--muted);">' + esc(fmtTime(c.ts)) + '</td>' +
+          '</tr>';
+      }).join('');
+    }
   }
-}
 
-function closeSlotPromo(){
-  document.getElementById('slotPromo').style.display = 'none';
-}
+  async function tick() {
+    try {
+      var res = await fetch('/api/dashboard', { headers: { 'X-Easy-Mcp-Admin': ADMIN } });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      ui.lastData = await res.json();
+      ui.connected = true;
+      render();
+    } catch (e) {
+      ui.connected = false;
+      render();
+    }
+  }
 
-tick();
-setInterval(tick, 2000);
+  async function setProject(pathOverride) {
+    var p = String(pathOverride !== undefined ? pathOverride : document.getElementById('projectPath').value).trim();
+    var msgEl = document.getElementById('msg');
+    if (!p) {
+      msgEl.textContent = 'Please enter a valid folder path.';
+      return;
+    }
+    try {
+      var d = await apiPost('/api/set-project', { path: p });
+      msgEl.textContent = d.success ? '' : (d.error || 'Failed to update folder');
+      if (d.success) {
+        showToast('Workspace updated');
+      }
+      tick();
+    } catch (e) {
+      msgEl.textContent = 'Failed to update folder';
+    }
+  }
+
+  async function saveSetting(key, value, label) {
+    try {
+      var body = {};
+      body[key] = value;
+      await apiPost('/api/settings', body);
+      if (label) showToast(label);
+      tick();
+    } catch (e) {
+      showToast('Failed to update setting');
+      tick();
+    }
+  }
+
+  // Endpoint Modal Controls
+  var endpointModal = document.getElementById('endpointModal');
+  document.getElementById('btnOpenEndpoint').addEventListener('click', function() {
+    endpointModal.classList.add('open');
+  });
+  document.getElementById('btnCloseEndpoint').addEventListener('click', function() {
+    endpointModal.classList.remove('open');
+  });
+  endpointModal.addEventListener('click', function(e) {
+    if (e.target === endpointModal) endpointModal.classList.remove('open');
+  });
+
+  // Theme Controls
+  document.querySelectorAll('[data-set-theme]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      setTheme(btn.getAttribute('data-set-theme'));
+    });
+  });
+
+  // Copy MCP URL
+  document.getElementById('btnCopyUrl').addEventListener('click', function() {
+    var input = document.getElementById('mcpUrl');
+    var label = document.getElementById('copyBtnLabel');
+    var val = input.value;
+    var done = function() {
+      label.textContent = 'Copied';
+      showToast('MCP endpoint copied to clipboard');
+      setTimeout(function() { label.textContent = 'Copy link'; }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(val).then(done).catch(function() {
+        input.select();
+        document.execCommand('copy');
+        done();
+      });
+    } else {
+      input.select();
+      document.execCommand('copy');
+      done();
+    }
+  });
+
+  // Tunnel Mode Switch
+  document.querySelectorAll('[data-tunnel]').forEach(function(btn) {
+    btn.addEventListener('click', async function() {
+      var mode = btn.getAttribute('data-tunnel');
+      document.getElementById('mcpUrl').value = '(switching tunnel...)';
+      try {
+        await apiPost('/api/set-tunnel', { mode: mode });
+        showToast(mode === 'funnel' ? 'Switched to Tailscale Funnel' : 'Switched to Cloudflare Tunnel');
+      } catch (e) {
+        showToast('Failed to switch tunnel');
+      }
+      tick();
+    });
+  });
+
+  // Workspace Controls
+  document.getElementById('btnSetProject').addEventListener('click', function() {
+    setProject();
+  });
+
+  document.getElementById('projectPath').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') setProject();
+  });
+
+  document.getElementById('btnPickFolder').addEventListener('click', async function() {
+    var btn = this;
+    var orig = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Browsing...';
+    document.getElementById('msg').textContent = '';
+    try {
+      var d = await apiPost('/api/pick-folder', {});
+      if (d.success) {
+        showToast('Workspace updated');
+      } else if (d.error && d.error !== 'No folder selected') {
+        document.getElementById('msg').textContent = d.error;
+      }
+    } catch (e) {
+      document.getElementById('msg').textContent = 'Folder picker failed';
+    }
+    btn.disabled = false;
+    btn.textContent = orig;
+    tick();
+  });
+
+  document.getElementById('recentList').addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-project]');
+    if (btn) setProject(btn.getAttribute('data-project'));
+  });
+
+  // Security Controls
+  document.getElementById('togReadOnly').addEventListener('change', function(e) {
+    saveSetting('readOnly', e.target.checked, e.target.checked ? 'Read-only mode enabled' : 'Read-only mode disabled');
+  });
+
+  document.getElementById('togDisableShell').addEventListener('change', function(e) {
+    saveSetting('disableShell', e.target.checked, e.target.checked ? 'Shell execution disabled' : 'Shell execution enabled');
+  });
+
+  var jailModal = document.getElementById('jailModal');
+  document.getElementById('togSkipJail').addEventListener('change', function(e) {
+    if (e.target.checked) {
+      e.target.checked = false;
+      jailModal.classList.add('open');
+    } else {
+      saveSetting('skipJail', false, 'Folder jail re-enabled');
+    }
+  });
+
+  document.getElementById('btnCancelJail').addEventListener('click', function() {
+    jailModal.classList.remove('open');
+  });
+
+  document.getElementById('btnConfirmJail').addEventListener('click', function() {
+    jailModal.classList.remove('open');
+    saveSetting('skipJail', true, 'Folder jail disabled');
+  });
+
+  jailModal.addEventListener('click', function(e) {
+    if (e.target === jailModal) jailModal.classList.remove('open');
+  });
+
+  document.getElementById('btnRestoreJail').addEventListener('click', function() {
+    saveSetting('skipJail', false, 'Folder jail re-enabled');
+  });
+
+  // Tools Drawer
+  document.getElementById('btnToggleTools').addEventListener('click', function() {
+    ui.toolsOpen = !ui.toolsOpen;
+    render();
+  });
+
+  document.getElementById('btnCloseTools').addEventListener('click', function() {
+    ui.toolsOpen = false;
+    render();
+  });
+
+  // Background Jobs Stop
+  document.getElementById('jobsBody').addEventListener('click', async function(e) {
+    var btn = e.target.closest('[data-stop-job]');
+    if (!btn) return;
+    var id = btn.getAttribute('data-stop-job');
+    try {
+      await apiPost('/api/stop-job', { id: id });
+      showToast('Stopped background job ' + id);
+    } catch (e) {
+      showToast('Failed to stop job');
+    }
+    tick();
+  });
+
+  // Call History Collapse & Filtering
+  document.getElementById('btnToggleCalls').addEventListener('click', function() {
+    ui.callsCollapsed = !ui.callsCollapsed;
+    try { localStorage.setItem('easy_mcp_calls_collapsed', ui.callsCollapsed ? '1' : '0'); } catch (e) {}
+    render();
+  });
+
+  document.getElementById('callsSearch').addEventListener('input', function(e) {
+    ui.callSearch = e.target.value;
+    render();
+  });
+
+  document.querySelectorAll('[data-call-status]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      ui.callStatusFilter = btn.getAttribute('data-call-status');
+      render();
+    });
+  });
+
+  // Close modals on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      endpointModal.classList.remove('open');
+      jailModal.classList.remove('open');
+    }
+  });
+
+  // Restore saved preferences
+  try {
+    var savedTheme = localStorage.getItem('easy_mcp_theme');
+    if (savedTheme === 'dark' || savedTheme === 'oled' || savedTheme === 'light') {
+      setTheme(savedTheme);
+    }
+    if (localStorage.getItem('easy_mcp_calls_collapsed') === '1') {
+      ui.callsCollapsed = true;
+    }
+  } catch (e) {}
+
+  tick();
+  setInterval(tick, 2000);
+})();
 </script>
 </body>
 </html>`;
